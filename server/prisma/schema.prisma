@@ -1,0 +1,115 @@
+generator client {
+ provider = "prisma-client-js"
+}
+
+datasource db {
+ provider = "postgresql"
+ url = env("DATABASE_URL")
+}
+
+model User {
+
+ id Int @id @default(autoincrement())
+
+ name String
+
+ email String @unique
+
+ password String
+
+ role String @default("participant")
+
+ createdAt DateTime @default(now())
+
+ teams Team[]
+
+}
+
+
+model Team {
+
+ id Int @id @default(autoincrement())
+
+ teamId String @unique
+
+ teamName String
+
+ category String
+
+ projectTheme String
+
+ memberCount Int
+
+ status String @default("Pending")
+
+ transactionId String?
+
+ paymentStatus String @default("Pending")
+
+ receiptUrl String?
+
+ leaderId Int?
+
+leader User? @relation(fields:[leaderId],references:[id])
+
+ members TeamMember[]
+
+}
+
+
+model TeamMember{
+
+ id Int @id @default(autoincrement())
+
+ name String
+
+ email String
+
+ teamRef Int
+
+ team Team @relation(fields:[teamRef],references:[id])
+
+}
+
+
+model Payment {
+
+ id Int @id @default(autoincrement())
+
+ amount Float
+
+ status String
+
+ teamId Int
+
+}
+model Announcement{
+
+id Int @id @default(autoincrement())
+
+title String
+
+message String
+
+createdAt DateTime @default(now())
+
+}
+model Submission{
+
+id Int @id @default(autoincrement())
+
+githubLink String
+
+demoLink String
+
+pptLink String
+
+description String
+
+status String @default("Pending")
+
+teamRef Int
+
+createdAt DateTime @default(now())
+
+}
